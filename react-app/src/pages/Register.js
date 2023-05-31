@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddUser } from "../hooks/useUserData";
-import { Mutation } from "react-query";
 
 const Register = () => {
   const navigate = useNavigate();
