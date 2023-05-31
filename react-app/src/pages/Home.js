@@ -7,20 +7,14 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Function to check if the user is authenticated
-    const checkAuthentication = async () => {
-      try {
-        const response = await fetch("/api/check-authentication");
-        if (!response.ok) {
-          //User is not authenticated
-          navigate("/sign-in");
-        }
-      } catch (err) {
-        console.error(err);
+    const checkAuthentication = () => {
+      const isAuthenticated = localStorage.getItem("authToken");
+
+      if (!isAuthenticated) {
+        navigate("/sign-in");
       }
     };
 
-    // Call the function when navigate-value changes
     checkAuthentication();
   }, [navigate]);
 

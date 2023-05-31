@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAddUser } from "../hooks/useUserData";
+import { Mutation } from "react-query";
 
 const Register = () => {
   const navigate = useNavigate();
+  const { mutate: addUser } = useAddUser();
 
-  const handleForm = async (e) => {
+  const handleForm = (e) => {
     e.preventDefault();
-
     const formData = {
       name: e.target.name.value,
       email: e.target.email.value,
@@ -14,21 +16,10 @@ const Register = () => {
     };
 
     try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        navigate("/sign-in");
-      } else {
-        console.log("Registration failed");
-      }
-    } catch (err) {
-      console.error(err);
+      addUser(formData);
+      navigate("/sign-in");
+    } catch (error) {
+      console.log(error);
     }
   };
 

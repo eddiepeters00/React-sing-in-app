@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSignInUser } from "../hooks/useUserData";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [authenticated, setAuthenticated] = useState(false);
+  const { mutate: signInUser } = useSignInUser();
 
   const handleForm = async (e) => {
     e.preventDefault();
@@ -14,23 +15,11 @@ const SignIn = () => {
     };
 
     try {
-      const response = await fetch("/api/sign-in", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.status === 200) {
-        console.log("Sign-in successful");
-        setAuthenticated(true);
-        navigate("/");
-      } else {
-        console.log("Sign-in failed");
-      }
-    } catch (err) {
-      console.error(err);
+      signInUser(formData);
+      localStorage.setItem("authToken", "true");
+      navigate("/");
+    } catch (error) {
+      console.error(error);
     }
   };
 

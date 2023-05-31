@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useQuery } from "react-query";
+import axios from "axios";
+
 import {
   createColumnHelper,
   flexRender,
@@ -23,28 +26,28 @@ const columns = [
 const UserTable = () => {
   const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    getAllUsers();
-  }, []);
-
   const getAllUsers = async () => {
     try {
-      const response = await fetch("/api/getAllUsers");
-      if (response.ok) {
-        const usersData = await response.json();
-        setUsers(usersData);
-      }
-    } catch (err) {
-      console.error(err);
+      const response = await axios.get("/api/getAllUsers");
+      return response.data;
+    } catch (error) {
+      throw new Error("Failed to fetch users.");
     }
   };
+
+  const { data: usersData } = useQuery("users", getAllUsers); // Use useQuery to fetch users
+
+  useEffect(() => {
+    if (usersData) {
+      setUsers(usersData);
+    }
+  }, [usersData]); // Update state when usersData changes
 
   const table = useReactTable({
     data: users,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-
   return (
     <div className="p-2">
       <h2>Registered users</h2>

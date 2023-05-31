@@ -5,13 +5,13 @@ import "../App.css";
 const LogOutButton = () => {
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
-      await fetch("/api/log-out");
+      localStorage.removeItem("authToken");
+      navigate("/sign-in");
     } catch (err) {
       console.error(err);
     }
-    navigate("/sign-in");
   };
 
   return (
